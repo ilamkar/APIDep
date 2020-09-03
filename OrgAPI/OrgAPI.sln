@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrgDAL", "OrgDAL\OrgDAL.csproj", "{9CD00CBA-4212-4866-9CC4-23D6EE7FA8A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrgAPI", "OrgAPI\OrgAPI.csproj", "{4535F79C-E15E-4422-85A3-21D8C73CD1E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CD00CBA-4212-4866-9CC4-23D6EE7FA8A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD00CBA-4212-4866-9CC4-23D6EE7FA8A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD00CBA-4212-4866-9CC4-23D6EE7FA8A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD00CBA-4212-4866-9CC4-23D6EE7FA8A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4535F79C-E15E-4422-85A3-21D8C73CD1E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4535F79C-E15E-4422-85A3-21D8C73CD1E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4535F79C-E15E-4422-85A3-21D8C73CD1E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4535F79C-E15E-4422-85A3-21D8C73CD1E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE35988C-CBCE-4CB8-9A73-039A6DA1BBC2}
+	EndGlobalSection
+EndGlobal
