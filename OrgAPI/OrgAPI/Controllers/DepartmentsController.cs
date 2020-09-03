@@ -17,7 +17,7 @@ namespace OrgAPI.Controllers
             this.dbContext = dbContext;
         }
         [HttpGet]
-        public IEnumerable<Department> Get() //Ienumerable because it have list of data
+        public IEnumerable<Department> Get() //Ienumerable because it have list of data IAction
         {
             var Depts = dbContext.Departments.ToList();
             return Depts;
@@ -25,7 +25,7 @@ namespace OrgAPI.Controllers
         [HttpGet("{id}")]
         public Department Get(int id)
         {
-            var Dept = dbContext.Departments.Where(x => x.Did == id).FirstOrDefault();
+            var Dept = dbContext.Departments.Where(x => x.Did == id).FirstOrDefault(); 
             return Dept;
         }
         [HttpDelete("{id}")]
