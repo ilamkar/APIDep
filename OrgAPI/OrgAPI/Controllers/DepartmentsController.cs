@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using OrgDAL;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using OrgDAL;
 
 namespace OrgAPI.Controllers
 {
@@ -23,10 +21,10 @@ namespace OrgAPI.Controllers
             return Depts;
         }
         [HttpGet("{id}")]
-        public Department Get(int id)
+        public IActionResult Get(int id)
         {
-            var Dept = dbContext.Departments.Where(x => x.Did == id).FirstOrDefault(); 
-            return Dept;
+            var Dept = dbContext.Departments.Where(x => x.Did == id).FirstOrDefault();
+            return Ok(Dept);
         }
         [HttpDelete("{id}")]
         public string Delete(int id)
@@ -38,12 +36,19 @@ namespace OrgAPI.Controllers
         }
 
         [HttpPost]
-        public Department Post(Department D)
+        public IActionResult Post(Department D)
         {
+            if (ModelState.IsValid)
+            {
+                dbContext.Add(D);
+                dbContext.SaveChanges();
+                return CreatedAtAction("Get", new { id = D.Did }, D);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
 
-            dbContext.Add(D);
-            dbContext.SaveChanges();
-            return D;
         }
         [HttpPut]
         public string Put(Department D)
