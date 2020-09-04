@@ -51,7 +51,7 @@ namespace OrgAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-                app.UseSwagger();
+                app.UseOpenApi();
             app.UseSwaggerUi3();
 
             //app.UseAuthorization();
