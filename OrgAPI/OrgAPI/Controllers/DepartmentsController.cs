@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OrgDAL;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +28,21 @@ namespace OrgAPI.Controllers
             return Ok(Dept);
         }
         [HttpDelete("{id}")]
-        public string Delete(int id)
+        public IActionResult Delete(int id)
         {
             var Dept = dbContext.Departments.Where(x => x.Did == id).FirstOrDefault();
-            dbContext.Remove(Dept);
-            dbContext.SaveChanges();
-            return "Record Deleted Sucessfully";
+            if (Dept != null)
+            {
+                dbContext.Remove(Dept);
+                dbContext.SaveChanges();
+                return Ok(Dept);
+            }
+            else
+            {
+                return NotFound();
+            }
+           
+         
         }
 
         [HttpPost]
@@ -51,12 +61,26 @@ namespace OrgAPI.Controllers
 
         }
         [HttpPut]
-        public string Put(Department D)
+        public IActionResult Put(Department D)
         {
-
-            dbContext.Update(D);
-            dbContext.SaveChanges();
-            return "Updated Sucessfully";
+            var Dept = dbContext.Departments.Where(x => x.Did == D.Did).AsNoTracking().FirstOrDefault();
+            if (Dept != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    dbContext.Update(D);
+                    dbContext.SaveChanges();
+                    return NoContent(); //or  Ok(D);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
