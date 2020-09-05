@@ -27,6 +27,14 @@ namespace OrgAPI
         public void ConfigureServices(IServiceCollection services)
         {
            services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
             services.AddDbContext<OrganizationDbContext>(); //injecting organizationDbContext object
             services.AddSwaggerDocument();
         }
@@ -43,7 +51,7 @@ namespace OrgAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-                app.UseSwagger();
+                app.UseOpenApi();
             app.UseSwaggerUi3();
 
             //app.UseAuthorization();
