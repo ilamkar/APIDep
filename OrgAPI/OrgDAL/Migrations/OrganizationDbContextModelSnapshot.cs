@@ -27,11 +27,44 @@ namespace OrgDAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Dname")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Did");
 
                     b.ToTable("Department");
+                });
+
+            modelBuilder.Entity("OrgDAL.Employee", b =>
+                {
+                    b.Property<int>("empid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Did")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("empid");
+
+                    b.HasIndex("Did");
+
+                    b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("OrgDAL.Employee", b =>
+                {
+                    b.HasOne("OrgDAL.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("Did")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

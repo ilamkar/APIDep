@@ -4,9 +4,9 @@ C:\Codebase\.netApi\OrgAPI\OrgDAL\bin\Debug\netcoreapp3.1\OrgDAL.runtimeconfig.d
 C:\Codebase\.netApi\OrgAPI\OrgDAL\bin\Debug\netcoreapp3.1\OrgDAL.dll
 C:\Codebase\.netApi\OrgAPI\OrgDAL\bin\Debug\netcoreapp3.1\OrgDAL.pdb
 C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.csprojAssemblyReference.cache
-C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.csproj.CoreCompileInputs.cache
 C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.AssemblyInfoInputs.cache
 C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.AssemblyInfo.cs
 C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.dll
 C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.pdb
 C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.genruntimeconfig.cache
+C:\Codebase\.netApi\OrgAPI\OrgDAL\obj\Debug\netcoreapp3.1\OrgDAL.csproj.CoreCompileInputs.cache

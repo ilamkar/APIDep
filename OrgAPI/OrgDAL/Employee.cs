@@ -13,9 +13,12 @@ namespace OrgDAL
         [Key]
         public int empid { get; set; }
 
-        public string fname { get; set; }
-        public string lname { get; set; }
-        public string position { get; set; }
+        public string Name { get; set; }
+        public string Gender { get; set; }
+
+        [ForeignKey("Department")]
+        public int Did { get; set; }
+        public Department Department { get; set; } //navigation property
 
     }
 }
