@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -22,11 +24,14 @@ namespace OrgAPI
         }
 
         public IConfiguration Configuration { get; }
+        public object IExecptionHandlerFeature { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           services.AddControllers();
+            services.AddControllers(
+               config=>config.Filters.Add(new MyExceptionFilter())
+               );
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -49,6 +54,27 @@ namespace OrgAPI
             app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
+
+            // Error Handling Globally - Middleware
+            //app.UseExceptionHandler(
+
+            //    options =>
+            //    {
+            //        options.Run(async context =>
+            //        {
+            //            context.Response.StatusCode = 500;
+            //            context.Response.ContentType = "application/json";
+            //            var ex = context.Features.Get<IExceptionHandlerFeature>();
+
+            //            if (ex != null)
+            //            {
+            //                await context.Response.WriteAsync(ex.Error.Message);
+            //            }
+
+            //        });
+            //    }
+
+            //    );
 
             app.UseRouting();
                 app.UseOpenApi();

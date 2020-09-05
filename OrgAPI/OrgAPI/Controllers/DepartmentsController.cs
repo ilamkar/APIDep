@@ -76,7 +76,7 @@ namespace OrgAPI.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //e.message
                 return StatusCode(500, "Something wenr work. We are working on it");
