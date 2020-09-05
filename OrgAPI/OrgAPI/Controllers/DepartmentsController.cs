@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OrgDAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,19 +25,61 @@ namespace OrgAPI.Controllers
                 return Depts;
             }
             */
+        //Lamda Expression for Circular Referencing Problem
+        //[HttpGet]
+        //public async Task<IActionResult> Get()
+        //{
+        //    var Depts = await dbContext.Departments.Include(x => x.Employees).Select(
+        //        x => new Department
+        //        {
+        //            Did = x.Did,
+        //            Dname = x.Dname,
+        //            Description = x.Description,
+        //            Employees = x.Employees.Select(y => new Employee
+        //            {
+        //                empid = y.empid,
+        //                Name = y.Name,
+        //                Gender = y.Gender,
+        //                Did = y.Did
+        //            })
+
+        //        }).ToListAsync();
+
+        //    if (Depts.Count != 0)
+        //    {
+        //        return Ok(Depts);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
         [HttpGet]
-        public async Task<IActionResult> Get() 
+        public async Task<IActionResult> Get()
         {
-            var Depts = await dbContext.Departments.ToListAsync();
+            try
+            {
+                var Depts = await dbContext.Departments.Include(x => x.Employees).ToListAsync();
 
-            if (Depts.Count != 0)
-            {
-                return Ok(Depts);
+                if (Depts.Count != 0)
+                {
+                    var jsonResults = JsonConvert.SerializeObject(Depts, Formatting.None, new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    }
+                        );
+                    return Ok(jsonResults);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception e)
             {
-                return NotFound();
+                //e.message
+                return StatusCode(500, "Something wenr work. We are working on it");
             }
         }
 

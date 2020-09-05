@@ -9,8 +9,8 @@ using OrgDAL;
 namespace OrgDAL.Migrations
 {
     [DbContext(typeof(OrganizationDbContext))]
-    [Migration("20200902032327_Employee")]
-    partial class Employee
+    [Migration("20200904215802_employee")]
+    partial class employee
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,7 @@ namespace OrgDAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Dname")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Did");
@@ -43,18 +44,29 @@ namespace OrgDAL.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("fname")
+                    b.Property<int>("Did")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("lname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("position")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("empid");
 
+                    b.HasIndex("Did");
+
                     b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("OrgDAL.Employee", b =>
+                {
+                    b.HasOne("OrgDAL.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("Did")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
