@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using OrgDAL;
 
 namespace OrgAPI.Controllers
 {
+    [Authorize(Roles="Admin,User")]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -21,33 +24,34 @@ namespace OrgAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Employees
+       // GET: api/Employees
+       [HttpGet]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        {
+            var Emps = await _context.Employees.Include(x => x.Department).
+                Select(x => new Employee
+                {
+                    empid = x.empid,
+                    Name = x.Name,
+                    Did = x.Did,
+                    Department = x.Department
+                }).
+                ToListAsync();
+            return Ok(Emps);
+        }
+
         //[HttpGet]
         //public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         //{
-        //    var Emps = await _context.Employees.Include(x=>x.Department).
-        //        Select(x=>new Employee {
-        //            empid = x.empid,
-        //            Name = x.Name,
-        //            Did = x.Did,
-        //            Department=x.Department
-        //        }).
-        //        ToListAsync();
-        //    return Ok(Emps);
-        //}
+        //    var Emps = await _context.Employees.Include(x => x.Department).ToListAsync();
+        //    var jsonResults = JsonConvert.SerializeObject(Emps, Formatting.None, new JsonSerializerSettings()
+        //    {
+        //        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        //    }
+        //       );
+        //    return Ok(jsonResults);
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
-        {
-            var Emps = await _context.Employees.Include(x => x.Department).ToListAsync();
-            var jsonResults = JsonConvert.SerializeObject(Emps, Formatting.None, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            }
-               );
-            return Ok(jsonResults);
-          
-        }
+        //}
         // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)

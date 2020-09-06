@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,11 +33,18 @@ namespace OrgAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
+            //services.AddControllers(
+            //   // Exception Handling globally - custom Filter
+            //   config => config.Filters.Add(new MyExceptionFilter())
+            //   ).AddXmlSerializerFormatters().AddXmlDataContractSerializerFormatters();
             services.AddControllers(
-                // Exception Handling globally - custom Filter
-               config=>config.Filters.Add(new MyExceptionFilter())
-               );
+               // Exception Handling globally - custom Filter
+               config => config.Filters.Add(new AuthorizeFilter())
+               ).AddXmlSerializerFormatters().AddXmlDataContractSerializerFormatters();
+
+
+            // for cookie based authentication
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -43,6 +54,25 @@ namespace OrgAPI
                     .AllowCredentials());
             });
             services.AddDbContext<OrganizationDbContext>(); //injecting organizationDbContext object
+
+      
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<OrganizationDbContext>().AddDefaultTokenProviders();
+
+            //return error code for unauthorized user
+
+
+            services.ConfigureApplicationCookie(opt =>
+            {
+                opt.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = RedirectContext =>
+                     {
+                         RedirectContext.HttpContext.Response.StatusCode = 401;
+                         return Task.CompletedTask;
+                     }
+                };
+            });
+
             services.AddSwaggerDocument();
         }
 
@@ -82,7 +112,10 @@ namespace OrgAPI
                 app.UseOpenApi();
             app.UseSwaggerUi3();
 
-            //app.UseAuthorization();
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
