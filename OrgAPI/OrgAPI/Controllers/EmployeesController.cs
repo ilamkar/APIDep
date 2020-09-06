@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -18,10 +19,12 @@ namespace OrgAPI.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly OrganizationDbContext _context;
+        UserManager<IdentityUser> userManager;
 
-        public EmployeesController(OrganizationDbContext context)
+        public EmployeesController(OrganizationDbContext context, UserManager<IdentityUser> _userManager)
         {
             _context = context;
+             userManager = _userManager;
         }
 
        // GET: api/Employees
@@ -31,7 +34,7 @@ namespace OrgAPI.Controllers
             var Emps = await _context.Employees.Include(x => x.Department).
                 Select(x => new Employee
                 {
-                    empid = x.empid,
+                    Empid = x.Empid,
                     Name = x.Name,
                     Did = x.Did,
                     Department = x.Department
@@ -72,7 +75,7 @@ namespace OrgAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, Employee employee)
         {
-            if (id != employee.empid)
+            if (id != employee.Empid)
             {
                 return BadRequest();
             }
@@ -102,13 +105,41 @@ namespace OrgAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
+     //       Employee existingEmployee = await _context.Employees.SingleOrDefaultAsync(
+     //m => m.Name == employee.Name);
 
-            return CreatedAtAction("GetEmployee", new { id = employee.empid }, employee);
+
+     //       if (existingEmployee != null)
+     //       {
+     //           The employee already exists.
+     //            Do whatever you need to do -This is just an example.
+     //           ModelState.AddModelError(string.Empty, "This employee already exists.");
+
+     //       }
+
+            if (ModelState.IsValid)
+            {
+               var user = await userManager.FindByNameAsync(User.Identity.Name);
+               employee.Id = user.Id;
+                _context.Add(employee);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetEmployee", new { id = employee.Empid }, employee);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
+
         }
+
+
+
+       
 
         // DELETE: api/Employees/5
         [HttpDelete("{id}")]
@@ -128,7 +159,7 @@ namespace OrgAPI.Controllers
 
         private bool EmployeeExists(int id)
         {
-            return _context.Employees.Any(e => e.empid == id);
+            return _context.Employees.Any(e => e.Empid == id);
         }
     }
 }

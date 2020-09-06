@@ -11,7 +11,7 @@ namespace OrgDAL
 
     {
         [Key]
-        public int empid { get; set; }
+        public int Empid { get; set; }
 
         public string Name { get; set; }
         public string Gender { get; set; }
@@ -19,6 +19,8 @@ namespace OrgDAL
         [ForeignKey("Department")]
         public int Did { get; set; }
         public Department Department { get; set; } //navigation property
+        //user created by
+        public string Id { get; set; }
 
     }
 }

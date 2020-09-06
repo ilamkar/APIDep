@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -10,15 +11,18 @@ using System.Threading.Tasks;
 
 namespace OrgAPI.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User,Admin")]
+    //[AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentsController : Controller
     {
         OrganizationDbContext dbContext;
-        public DepartmentsController(OrganizationDbContext dbContext)
+        UserManager<IdentityUser> userManager;
+        public DepartmentsController(OrganizationDbContext dbContext, UserManager<IdentityUser> _userManager)
         {
             this.dbContext = dbContext;
+            userManager = _userManager;
         }
         /*    [HttpGet]
             public IEnumerable<Department> Get() //Ienumerable because it have list of data IAction
@@ -145,6 +149,9 @@ namespace OrgAPI.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await userManager.FindByNameAsync(User.Identity.Name);
+                D.Id = user.Id;
+
                 dbContext.Add(D);
                 await dbContext.SaveChangesAsync();
                 return CreatedAtAction("Get", new { id = D.Did }, D);

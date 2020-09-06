@@ -17,5 +17,7 @@ namespace OrgDAL
         public string Description { get; set; }
 
         public IEnumerable<Employee> Employees { get; set; }
+
+        public string Id { get; set; }
     }
 }
